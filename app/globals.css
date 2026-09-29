@@ -1,26 +1,157 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --color-paper: #f3efea;
+  --color-paper-deep: #e9e2d8;
+  --color-ink: #1b1614;
+  --color-ink-soft: #463e3a;
+  --color-wine: #4e1117;
+  --color-crimson: #8c2a2b;
+  --color-gold: #b8913f;
+  --color-leaf: #1f6a14;
+
+  --font-display: var(--font-bodoni), "Bodoni 72", "Didot", Georgia, serif;
+  --font-sans: var(--font-hanken), "Helvetica Neue", Arial, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --gutter: clamp(16px, 2.2vw, 32px);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background: var(--color-paper);
+  overflow-x: clip;
+}
+
+::selection {
+  background: var(--color-wine);
+  color: var(--color-paper);
+}
+
+:focus-visible {
+  outline: 1.5px solid var(--color-crimson);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+a {
+  text-underline-offset: 0.22em;
+  text-decoration-thickness: 1px;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--color-ink) 35%, transparent) transparent;
+}
+
+/* Display voice: tall Didone capitals with italic lowercase accents */
+.display {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 0.95;
+  text-transform: uppercase;
+  /* A mid optical size keeps the Didone character but with sturdy hairlines */
+  font-variation-settings: "opsz" 28;
+}
+.display em,
+.accent {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: -0.005em;
+  font-weight: 500;
+}
+
+/* Smaller serif lines (captions, italics, pills) use the text cut: thicker strokes */
+.font-display {
+  font-weight: 500;
+  font-variation-settings: "opsz" 11;
+}
+
+/* Small tracked label used for pills and captions */
+.label {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* The pill control, rebuilt from the reference's soft card buttons */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  height: 42px;
+  padding: 0 22px;
+  background: #fbf9f6;
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  font-variation-settings: "opsz" 11;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow:
+    0 1px 2px rgb(27 22 20 / 0.05),
+    0 10px 30px -12px rgb(27 22 20 / 0.28);
+  transition:
+    background-color 0.5s var(--ease-out-expo),
+    color 0.5s var(--ease-out-expo),
+    box-shadow 0.5s var(--ease-out-expo);
+  white-space: nowrap;
+}
+.pill em {
+  font-style: italic;
+  text-transform: none;
+}
+.pill:hover {
+  background: var(--color-wine);
+  color: var(--color-paper);
+  box-shadow:
+    0 1px 2px rgb(27 22 20 / 0.1),
+    0 14px 34px -12px rgb(78 17 23 / 0.55);
+}
+
+/* Custom cursor replaces the system one only on fine pointers, never in text fields */
+.has-cursor,
+.has-cursor * {
+  cursor: none !important;
+}
+.has-cursor input,
+.has-cursor textarea,
+.has-cursor [contenteditable="true"] {
+  cursor: text !important;
+}
+
+/* If scripts never run, the loading screen still steps aside */
+.loader {
+  animation: loader-failsafe 0.4s ease 9s forwards;
+}
+@keyframes loader-failsafe {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

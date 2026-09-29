@@ -19,7 +19,12 @@ export default function Spaces() {
           {
             clipPath: "inset(0% 0% 0% 0%)",
             ease: "none",
-            scrollTrigger: { trigger: row, start: "top 85%", end: "top 35%", scrub: 0.6 },
+            scrollTrigger: {
+              trigger: row,
+              start: "top 85%",
+              end: "top 35%",
+              scrub: 0.6,
+            },
           },
         );
       });
@@ -28,10 +33,15 @@ export default function Spaces() {
   }, []);
 
   return (
-    <section id="spaces" ref={root} className="bg-paper px-[var(--gutter)] pb-[14vh] pt-[12vh]">
+    <section
+      id="spaces"
+      ref={root}
+      className="bg-paper px-[var(--gutter)] pb-[14vh] pt-[12vh]"
+    >
       <div className="flex flex-col items-center text-center">
         <p className="font-display text-sm italic text-ink-soft">
-          three spaces, <span className="not-italic tracking-[0.08em]">ONE ADDRESS</span>
+          three spaces,{" "}
+          <span className="not-italic tracking-[0.08em]">ONE ADDRESS</span>
         </p>
         <h2 className="display mt-4 text-[clamp(44px,7.4vw,110px)]">
           The <em>grounds</em>
@@ -47,12 +57,25 @@ export default function Spaces() {
           >
             <div>
               <span className="font-display text-sm italic text-crimson">{`${i + 1} of ${SPACES.length}`}</span>
-              <h3 className="display mt-2 text-[clamp(40px,5.2vw,76px)]">{s.name}</h3>
-              <p className="mt-2 font-display text-lg italic text-ink-soft">{s.accent}</p>
+              <h3 className="display mt-2 text-[clamp(40px,5.2vw,76px)]">
+                {s.name}
+              </h3>
+              <p className="mt-2 font-display text-lg italic text-ink-soft">
+                {s.accent}
+              </p>
             </div>
-            <p className="max-w-[46ch] text-base leading-relaxed text-ink-soft md:text-[17px]">{s.body}</p>
+            <p className="max-w-[46ch] text-base leading-relaxed text-ink-soft md:text-[17px]">
+              {s.body}
+            </p>
             <div data-row-img className="relative aspect-[4/3] overflow-hidden">
-              <Image src={s.image} alt={s.alt} fill sizes="(min-width:768px) 30vw, 100vw" className="object-cover transition-transform duration-[1.4s] ease-[var(--ease-out-expo)] hover:scale-[1.04]" />
+              <Image
+                loading="eager"
+                src={s.image}
+                alt={s.alt}
+                fill
+                sizes="(min-width:768px) 30vw, 100vw"
+                className="object-cover transition-transform duration-[1.4s] ease-[var(--ease-out-expo)] hover:scale-[1.04]"
+              />
             </div>
           </article>
         ))}
@@ -63,8 +86,16 @@ export default function Spaces() {
         <ul className="mx-auto mt-6 flex max-w-5xl flex-wrap items-baseline justify-center gap-x-6 gap-y-2 font-display text-[clamp(22px,2.8vw,38px)]">
           {OCCASIONS.map((o, i) => (
             <li key={o} className="flex items-baseline gap-6">
-              <span className={i % 2 ? "italic" : "uppercase tracking-[-0.01em]"}>{o}</span>
-              {i < OCCASIONS.length - 1 && <span className="text-gold" aria-hidden>◆</span>}
+              <span
+                className={i % 2 ? "italic" : "uppercase tracking-[-0.01em]"}
+              >
+                {o}
+              </span>
+              {i < OCCASIONS.length - 1 && (
+                <span className="text-gold" aria-hidden>
+                  ◆
+                </span>
+              )}
             </li>
           ))}
         </ul>

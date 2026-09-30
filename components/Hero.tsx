@@ -5,10 +5,18 @@ import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import Emblem from "./Emblem";
 
 const FRAME_COUNT = 328;
+// The film's own frame rate: once scrolling starts it keeps playing at this pace.
+const FPS = 24;
+// Intro timing in seconds at normal pace: the frame opens, then the film runs.
+const OPEN = 1.2;
+const FILM_START = OPEN;
+const FILM_END = FILM_START + (FRAME_COUNT - 1) / FPS;
+// Brisk scrolling can play the intro up to this much faster than normal (plus 1x).
+const MAX_BOOST = 6;
 const src = (i: number) => `/hero/f/${String(i).padStart(3, "0")}.webp`;
 
-// Coarse-to-fine load order: every 32nd frame first, then 16th, 8th ... so an
-// early scrub already has evenly spaced frames to show while the rest arrive.
+// Coarse-to-fine load order: every 32nd frame first, then 16th, 8th ... so early
+// playback already has evenly spaced frames to show while the rest arrive.
 function loadOrder(n: number) {
   const seen = new Set<number>();
   const order: number[] = [];
@@ -120,62 +128,188 @@ export default function Hero() {
       };
     }
 
+    // The intro is a timed sequence, not a scroll length: while it runs the page
+    // holds still at the top and scroll input only steers it (direction and
+    // speed). It keeps playing on its own between inputs, and once it reaches
+    // the end the page scroll is released, so no empty scrolling follows.
+    const phone = () => window.innerWidth < 768;
+    const FULL = "inset(0px 0px 0px 0px)";
+    const startInset = () => {
+      if (phone()) return FULL;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const side = Math.max(24, w * 0.07);
+      return `inset(76px ${side}px ${h * 0.07}px ${side}px)`;
+    };
+    // Phones keep the film full-bleed top to bottom; the framed close suits wide screens.
+    const endInset = () => {
+      if (phone()) return FULL;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      return `inset(${h * 0.16}px ${w * 0.2}px ${h * 0.24}px ${w * 0.2}px)`;
+    };
+
+    let tl!: gsap.core.Timeline;
     const ctxGsap = gsap.context(() => {
-      // Phones keep the film full-bleed, top to bottom, the whole way through;
-      // the framed open and close only suit wide screens.
-      const phone = () => window.innerWidth < 768;
-      const FULL = "inset(0px 0px 0px 0px)";
-      const startInset = () => {
-        if (phone()) return FULL;
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        const side = Math.max(24, w * 0.07);
-        return `inset(76px ${side}px ${h * 0.07}px ${side}px)`;
-      };
-      const endInset = () => {
-        if (phone()) return FULL;
-        const w = window.innerWidth;
-        const h = window.innerHeight;
-        return `inset(${h * 0.16}px ${w * 0.2}px ${h * 0.24}px ${w * 0.2}px)`;
-      };
-
-      gsap.set(frame.current, { clipPath: startInset() });
-
-      const tl = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: {
-          trigger: section.current,
-          start: "top top",
-          end: () => `+=${window.innerHeight * 5.2}`,
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
-
+      tl = gsap.timeline({ paused: true, defaults: { ease: "none" } });
       // 1. The frame opens to full bleed; the name steps back.
-      tl.fromTo(frame.current, { clipPath: startInset }, { clipPath: "inset(0px 0px 0px 0px)", duration: 1 }, 0)
-        .fromTo(media.current, { scale: 1.1 }, { scale: 1, duration: 1 }, 0)
-        .to(title.current, { autoAlpha: 0, yPercent: -18, filter: "blur(10px)", duration: 0.7 }, 0)
+      tl.fromTo(frame.current, { clipPath: startInset }, { clipPath: FULL, duration: OPEN, ease: "power2.inOut" }, 0)
+        .fromTo(media.current, { scale: 1.1 }, { scale: 1, duration: OPEN, ease: "power2.out" }, 0)
+        .to(title.current, { autoAlpha: 0, yPercent: -18, filter: "blur(10px)", duration: OPEN * 0.7 }, 0)
         .to(cue.current, { autoAlpha: 0, duration: 0.3 }, 0)
-        // 2. Only once it is full does the walk play, bound to the scroll.
-        .to(state, { f: FRAME_COUNT - 1, duration: 6, onUpdate: draw }, 1)
-        // 3. The film settles, shrinks and is carried away up the page.
-        .to(frame.current, { clipPath: endInset, duration: 1.1 }, 7.1)
-        .to(media.current, { scale: 1.06, duration: 1.1 }, 7.1)
-        .fromTo(shade.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 7.2)
-        .fromTo(outro.current, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 7.4);
+        // 2. The walk plays at the film's own pace (frames are drawn from the playhead).
+        .to({}, { duration: FILM_END - FILM_START }, FILM_START)
+        // 3. The film settles and shrinks, and the closing line rises.
+        .to(frame.current, { clipPath: endInset, duration: 1.1, ease: "power2.inOut" }, FILM_END + 0.1)
+        .to(media.current, { scale: 1.06, duration: 1.1 }, FILM_END + 0.1)
+        .fromTo(shade.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, FILM_END + 0.2)
+        .fromTo(outro.current, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8 }, FILM_END + 0.4);
     }, section);
+    const END = tl.duration();
+
+    let t = 0; // playhead in seconds
+    let dir = 0; // 1 forward, -1 backward, 0 idle
+    let boost = 0; // extra playback rate from brisk scrolling, easing back to 0
+    let locked = false; // page scroll held while the intro plays
+    let entered = false; // the loading screen has lifted
+
+    const render = () => {
+      tl.time(t);
+      state.f = gsap.utils.clamp(0, FRAME_COUNT - 1, (t - FILM_START) * FPS);
+      draw();
+    };
+    const lock = () => {
+      locked = true;
+      document.documentElement.style.overflow = "hidden";
+    };
+    const unlock = () => {
+      locked = false;
+      document.documentElement.style.overflow = "";
+    };
+    const atTop = () => window.scrollY <= 2;
+    const menuOpen = () => {
+      const m = document.getElementById("site-menu");
+      return !!m && getComputedStyle(m).display !== "none";
+    };
+
+    // Returns true when the input belongs to the intro and must not scroll the page.
+    const claim = (down: boolean, amount: number) => {
+      if (!entered || menuOpen()) return false;
+      if (!locked) {
+        // Back at the very top, scrolling can pick the intro up again in either direction.
+        if (!atTop() || (down ? t >= END : t <= 0)) return false;
+        lock();
+      }
+      dir = down ? 1 : -1;
+      boost = Math.min(MAX_BOOST, boost + amount);
+      return true;
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaY) < 1) return;
+      const px = e.deltaMode === 1 ? e.deltaY * 40 : e.deltaY;
+      if (claim(px > 0, Math.min(Math.abs(px), 400) * 0.004)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    };
+
+    let touchY = 0;
+    const onTouchStart = (e: TouchEvent) => {
+      touchY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      const y = e.touches[0].clientY;
+      const dy = touchY - y; // finger moving up = scrolling down
+      touchY = y;
+      if (Math.abs(dy) < 1) return;
+      if (claim(dy > 0, Math.min(Math.abs(dy), 120) * 0.02)) {
+        if (e.cancelable) e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    };
+
+    const KEYS_DOWN = ["ArrowDown", "PageDown", " ", "End"];
+    const KEYS_UP = ["ArrowUp", "PageUp", "Home"];
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.target as HTMLElement).closest?.("input, textarea, select, [contenteditable]")) return;
+      const down = KEYS_DOWN.includes(e.key);
+      if (!down && !KEYS_UP.includes(e.key)) return;
+      if (claim(down, 1)) e.preventDefault();
+    };
+
+    // An in-page link (menu, "Plan your celebration") skips the intro so the jump works.
+    const onAnchor = (e: MouseEvent) => {
+      if (!locked) return;
+      if (!(e.target as HTMLElement).closest?.('a[href^="#"]')) return;
+      t = END;
+      dir = 0;
+      render();
+      unlock();
+    };
+
+    const onEntered = () => {
+      entered = true;
+      if (atTop()) {
+        lock();
+      } else {
+        // Reloaded further down the page: show the intro as already finished.
+        t = END;
+        render();
+      }
+    };
+
+    const onResize = () => {
+      // Re-measure the framed insets; force the redraw since the playhead may not have moved.
+      tl.invalidate();
+      tl.render(t, true, true);
+    };
+
+    let last = performance.now();
+    const play = () => {
+      const now = performance.now();
+      const dt = Math.min(0.25, (now - last) / 1000);
+      last = now;
+      if (!dir) return;
+      t = gsap.utils.clamp(0, END, t + dir * (1 + boost) * dt);
+      boost *= Math.pow(0.08, dt); // a brisk scroll settles back to normal pace in about a second
+      render();
+      if (dir > 0 && t >= END) {
+        dir = 0;
+        unlock();
+      } else if (dir < 0 && t <= 0) {
+        dir = 0; // back at the title; the page stays put until the next scroll down
+      }
+    };
+
+    const opts = { capture: true, passive: false } as const;
+    window.addEventListener("wheel", onWheel, opts);
+    window.addEventListener("touchstart", onTouchStart, { capture: true, passive: true });
+    window.addEventListener("touchmove", onTouchMove, opts);
+    window.addEventListener("keydown", onKey, true);
+    document.addEventListener("click", onAnchor, true);
+    window.addEventListener("ekamra:entered", onEntered);
+    window.addEventListener("resize", onResize);
+    gsap.ticker.add(play);
+    // Remounted after the loading screen already lifted (e.g. a hot reload): start now.
+    if (!document.querySelector(".loader")) onEntered();
 
     return () => {
       cancelled = true;
       ro.disconnect();
+      gsap.ticker.remove(play);
+      window.removeEventListener("wheel", onWheel, opts);
+      window.removeEventListener("touchstart", onTouchStart, true);
+      window.removeEventListener("touchmove", onTouchMove, opts);
+      window.removeEventListener("keydown", onKey, true);
+      document.removeEventListener("click", onAnchor, true);
+      window.removeEventListener("ekamra:entered", onEntered);
+      window.removeEventListener("resize", onResize);
+      if (locked) unlock();
       ctxGsap.revert();
     };
   }, []);
 
-  // Plain wrapper: GSAP pins the section inside it, so React never loses track of its node.
   return (
     <div>
     <section id="top" ref={section} className="relative h-lvh w-full overflow-hidden bg-paper" aria-label="Ekamra Greens">

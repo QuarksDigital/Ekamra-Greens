@@ -83,16 +83,13 @@ export default function Spaces() {
 
       <div className="mt-[10vh] text-center">
         <p className="label text-ink-soft">Celebrations we host</p>
-        <ul className="mx-auto mt-6 flex max-w-5xl flex-wrap items-baseline justify-center gap-x-6 gap-y-2 font-display text-[clamp(22px,2.8vw,38px)]">
+        {/* Phones stack the occasions with a diamond centred between each; wider screens run them inline */}
+        <ul className="mx-auto mt-6 flex max-w-5xl flex-col items-center gap-y-2 font-display text-[clamp(22px,2.8vw,38px)] md:flex-row md:flex-wrap md:items-baseline md:justify-center md:gap-x-6">
           {OCCASIONS.map((o, i) => (
-            <li key={o} className="flex items-baseline gap-6">
-              <span
-                className={"uppercase tracking-[-0.01em]"}
-              >
-                {o}
-              </span>
+            <li key={o} className="flex flex-col items-center gap-2 md:flex-row md:items-baseline md:gap-6">
+              <span className="text-balance uppercase tracking-[-0.01em]">{o}</span>
               {i < OCCASIONS.length - 1 && (
-                <span className="text-gold" aria-hidden>
+                <span className="text-[0.55em] leading-none text-gold md:text-[1em] md:leading-normal" aria-hidden>
                   ◆
                 </span>
               )}

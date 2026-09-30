@@ -100,8 +100,9 @@ export default function Music() {
     const t0 = performance.now();
     const ms = 900;
     const step = (now: number) => {
-      const k = Math.min(1, (now - t0) / ms);
-      el.volume = from + (target - from) * k;
+      // A frame's timestamp can predate t0 slightly, so keep k (and the volume) in range.
+      const k = Math.min(1, Math.max(0, (now - t0) / ms));
+      el.volume = Math.min(1, Math.max(0, from + (target - from) * k));
       if (k < 1) fade.current = requestAnimationFrame(step);
       else then?.();
     };

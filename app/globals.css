@@ -52,6 +52,8 @@ a {
 }
 
 html {
+  /* Keep the scrollbar's space while the loader or hero intro holds scrolling, so nothing shifts on release */
+  scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in oklab, var(--color-ink) 35%, transparent) transparent;
 }

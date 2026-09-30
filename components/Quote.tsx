@@ -13,13 +13,15 @@ export default function Quote() {
   useEffect(() => {
     if (prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
+      // Phones drift less, so the full width of every row stays on screen.
+      const drift = window.innerWidth < 768 ? 3 : 8;
       gsap.utils.toArray<HTMLElement>("[data-row]").forEach((row, i) => {
         const dir = i % 2 ? 1 : -1;
         gsap.fromTo(
           row,
-          { xPercent: 8 * dir },
+          { xPercent: drift * dir },
           {
-            xPercent: -8 * dir,
+            xPercent: -drift * dir,
             ease: "none",
             scrollTrigger: { trigger: root.current, start: "top bottom", end: "bottom top", scrub: 0.6 },
           },
@@ -40,7 +42,7 @@ export default function Quote() {
 
   return (
     <section ref={root} className="relative flex min-h-[140vh] flex-col items-center justify-center overflow-hidden bg-paper py-[14vh]">
-      <blockquote className="display relative z-10 w-full text-center text-[clamp(52px,10.4vw,168px)] leading-[0.95]">
+      <blockquote className="display relative z-10 w-full text-center text-[clamp(24px,8.6vw,52px)] leading-[0.95] md:text-[clamp(52px,10.4vw,168px)]">
         {ROWS.map((r) => (
           <span key={r} data-row className="block whitespace-nowrap will-change-transform">
             {r}

@@ -1,6 +1,9 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-190 -190 380 380">
-  <rect x="-190" y="-190" width="380" height="380" rx="84" fill="#f3efea"/>
-  <g fill="none" stroke="#4e1117" stroke-width="16">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-178 -178 356 356">
+  <style>
+    .ring { stroke: #4e1117; }
+    @media (prefers-color-scheme: dark) { .ring { stroke: #e9d6d0; } }
+  </style>
+  <g class="ring" fill="none" stroke-width="16">
     <circle cx="0" cy="-86" r="80"/>
     <circle cx="86" cy="0" r="80"/>
     <circle cx="0" cy="86" r="80"/>

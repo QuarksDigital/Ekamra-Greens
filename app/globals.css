@@ -155,3 +155,20 @@ html {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Sound toggle: bars dance while music plays, rest flat when muted */
+.sound-bar {
+  transform-origin: bottom;
+  transform: scaleY(0.25);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+.sound-bar.is-on {
+  animation: sound-bar 0.9s ease-in-out infinite alternate;
+}
+@keyframes sound-bar {
+  from { transform: scaleY(0.3); }
+  to { transform: scaleY(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sound-bar.is-on { animation: none; transform: scaleY(0.8); }
+}

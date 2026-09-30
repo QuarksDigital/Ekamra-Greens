@@ -32,6 +32,7 @@ export default function Hero() {
   const title = useRef<HTMLDivElement>(null);
   const cue = useRef<HTMLParagraphElement>(null);
   const outro = useRef<HTMLParagraphElement>(null);
+  const shade = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const cvs = canvas.current!;
@@ -120,19 +121,22 @@ export default function Hero() {
     }
 
     const ctxGsap = gsap.context(() => {
+      // Phones keep the film full-bleed, top to bottom, the whole way through;
+      // the framed open and close only suit wide screens.
+      const phone = () => window.innerWidth < 768;
+      const FULL = "inset(0px 0px 0px 0px)";
       const startInset = () => {
+        if (phone()) return FULL;
         const w = window.innerWidth;
         const h = window.innerHeight;
-        const side = w < 768 ? 12 : Math.max(24, w * 0.07);
-        const top = w < 768 ? 72 : 76;
-        const bottom = w < 768 ? h * 0.2 : h * 0.07;
-        return `inset(${top}px ${side}px ${bottom}px ${side}px)`;
+        const side = Math.max(24, w * 0.07);
+        return `inset(76px ${side}px ${h * 0.07}px ${side}px)`;
       };
       const endInset = () => {
+        if (phone()) return FULL;
         const w = window.innerWidth;
         const h = window.innerHeight;
-        const side = w < 768 ? 22 : w * 0.2;
-        return `inset(${h * 0.16}px ${side}px ${h * 0.24}px ${side}px)`;
+        return `inset(${h * 0.16}px ${w * 0.2}px ${h * 0.24}px ${w * 0.2}px)`;
       };
 
       gsap.set(frame.current, { clipPath: startInset() });
@@ -160,6 +164,7 @@ export default function Hero() {
         // 3. The film settles, shrinks and is carried away up the page.
         .to(frame.current, { clipPath: endInset, duration: 1.1 }, 7.1)
         .to(media.current, { scale: 1.06, duration: 1.1 }, 7.1)
+        .fromTo(shade.current, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 7.2)
         .fromTo(outro.current, { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.8 }, 7.4);
     }, section);
 
@@ -173,7 +178,7 @@ export default function Hero() {
   // Plain wrapper: GSAP pins the section inside it, so React never loses track of its node.
   return (
     <div>
-    <section id="top" ref={section} className="relative h-svh w-full overflow-hidden bg-paper" aria-label="Ekamra Greens">
+    <section id="top" ref={section} className="relative h-lvh w-full overflow-hidden bg-paper" aria-label="Ekamra Greens">
       <div ref={frame} className="absolute inset-0 overflow-hidden will-change-[clip-path]">
         <div ref={media} className="absolute inset-0 will-change-transform">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -181,6 +186,11 @@ export default function Hero() {
           <canvas ref={canvas} className="absolute inset-0 h-full w-full" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgb(27_10_8/0.05)_0%,rgb(27_10_8/0.45)_100%)]" />
         </div>
+        {/* Phones: the closing line sits on the film, so darken its foot */}
+        <div
+          ref={shade}
+          className="invisible absolute inset-0 bg-[linear-gradient(to_top,rgb(20_8_6/0.8),rgb(20_8_6/0)_50%)] opacity-0 md:hidden"
+        />
 
         <div
           ref={title}
@@ -204,7 +214,7 @@ export default function Hero() {
       </p>
       <p
         ref={outro}
-        className="invisible absolute bottom-[8vh] left-1/2 w-[min(90vw,720px)] -translate-x-1/2 text-center font-display text-[clamp(22px,2.6vw,38px)] leading-tight text-ink opacity-0"
+        className="invisible absolute bottom-[calc(8vh+100lvh-100svh)] left-1/2 w-[min(90vw,720px)] -translate-x-1/2 text-center font-display text-[clamp(22px,2.6vw,38px)] leading-tight text-paper opacity-0 [text-shadow:0_2px_24px_rgb(20_6_4/0.5)] md:text-ink md:[text-shadow:none]"
       >
         Your celebration, <em>from the first step</em> to the last vow.
       </p>

@@ -22,8 +22,8 @@ export const SPACES = [
     accent: "under open sky",
     body:
       "A wide, manicured lawn framed by old shade trees and lit by lamps after dusk. Room for a mandap, a stage, a long buffet and the whole family, with the evening breeze thrown in.",
-    image: "/img/lawn-tree.webp",
-    alt: "The Ekamra Greens lawn under a large shade tree",
+    image: "/img/lawn-wedding-night.webp",
+    alt: "The lawn at night, set with a floral arched stage and rows of seating",
   },
   {
     name: "The Banquet",
@@ -35,7 +35,7 @@ export const SPACES = [
   },
   {
     name: "Guest Rooms",
-    accent: "rest between rituals",
+    accent: "spacious rooms with all facilities",
     body:
       "Air-conditioned rooms on the same grounds, so the bride, the groom and the elders can rest, dress and return without ever leaving the celebration.",
     image: "/img/room-red.webp",
@@ -48,6 +48,7 @@ export const OCCASIONS = [
   "Receptions",
   "Sangeet & Mehendi",
   "Engagements",
+  "Cocktail",
   "Corporate evenings",
   "Birthdays & anniversaries",
 ];

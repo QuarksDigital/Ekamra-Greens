@@ -218,7 +218,7 @@ export default function Forecourt() {
 
           <figure className="mt-10 hidden md:block">
             <div className="relative aspect-[3/2] w-[78%] overflow-hidden">
-              <Image src="/img/parking-forecourt.webp" alt="The paved forecourt at the Ekamra Greens gate" fill sizes="30vw" className="object-cover" />
+              <Image src="/img/parking-forecourt-gate.webp" alt="The wide paved forecourt outside the Ekamra Greens gate, shaded by an old tree" fill sizes="30vw" className="object-cover" />
             </div>
             <figcaption className="mt-3 font-display text-sm italic text-ink-soft">The real forecourt, at the gate.</figcaption>
           </figure>

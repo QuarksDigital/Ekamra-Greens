@@ -3,6 +3,7 @@ import { Bodoni_Moda, Hanken_Grotesk } from "next/font/google";
 import SmoothScroll from "@/components/SmoothScroll";
 import Loader from "@/components/Loader";
 import Cursor from "@/components/Cursor";
+import Music from "@/components/Music";
 import { SITE, SITE_URL, jsonLd } from "@/lib/site";
 import "./globals.css";
 
@@ -73,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Loader />
         <Cursor />
         <SmoothScroll />
+        <Music />
         {children}
       </body>
     </html>

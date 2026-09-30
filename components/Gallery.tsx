@@ -7,35 +7,35 @@ import { CONTACT } from "@/lib/content";
 
 type Tile = { name: string; alt: string; tall?: boolean };
 
-// Ordered for rhythm: aerial views of real evenings interleaved with the venue in detail.
+// Ordered for rhythm: real celebrations interleaved with the venue in detail.
 const TILES: Tile[] = [
   { name: "aerial-bride-trail", alt: "The bride in a flowing red veil walks through candle-bearers, seen from above" },
-  { name: "aerial-lawn-stage", alt: "The lawn full of guests with the stage glowing at the far end", tall: true },
+  { name: "aisle-couple", alt: "The bride and groom beneath chandeliers in a golden arched aisle", tall: true },
   { name: "hall-chandelier", alt: "A round chandelier set into the banquet ceiling" },
-  { name: "mirror", alt: "A gilded mirror display on the lawn at night" },
-  { name: "aerial-crowd-dance", alt: "Guests with flower props dancing around the bride" },
-  { name: "aerial-venue-night", alt: "The whole venue lit up at night from above", tall: true },
+  { name: "entrance-arch-tunnel", alt: "A red arched tunnel of lights under a canopy of greenery and chandeliers" },
+  { name: "haldi-dance", alt: "The couple dancing among guests in yellow at the haldi" },
+  { name: "lawn-stage-red", alt: "A red arched stage glowing on the lawn at night", tall: true },
   { name: "entrance-florals", alt: "A floral gateway on the lawn" },
-  { name: "aerial-bride-circle", alt: "Guests gather around the bride on the lawn, seen from above" },
-  { name: "tree-night", alt: "The lawn's old tree lit at night" },
-  { name: "aerial-stage-lights", alt: "Stage lights beaming over the crowd on the lawn", tall: true },
+  { name: "mandap-gold", alt: "A golden latticed mandap hung with marigolds on the lawn at night" },
+  { name: "varmala-stage", alt: "The varmala on a floral stage, dancers and sparklers either side" },
+  { name: "bride-portrait", alt: "The bride in a red lehenga among palms", tall: true },
   { name: "corridor", alt: "A floral entrance corridor with chandeliers" },
-  { name: "aerial-guests-torches", alt: "Guests holding torches on the lawn at night" },
+  { name: "reception-stage", alt: "Cold pyros rise either side of the couple on the reception stage" },
   { name: "decor-objects", alt: "Brass and wooden decor pieces" },
-  { name: "aerial-lawn-walkway", alt: "The lit walkway and lawn packed with guests", tall: true },
+  { name: "groom-dancers", alt: "The groom walks in flanked by dancers in red", tall: true },
   { name: "banquet-facade", alt: "The banquet building among palms" },
-  { name: "aerial-bride-center", alt: "The bride at the centre of a ring of guests and torches" },
-  { name: "room-blue", alt: "A guest room with blue cushions" },
+  { name: "baraat-car", alt: "The groom arrives standing in a flower-decked open car" },
+  { name: "lawn-bar", alt: "A round bar lit up on the lawn at night" },
   { name: "lawn-balcony", alt: "The lawn seen from a first-floor balcony" },
   { name: "aerial-venue-wide", alt: "Ekamra Greens from high above, lights along its length", tall: true },
-  { name: "hall-long", alt: "The length of the banquet hall" },
-  { name: "aerial-bride-lawn", alt: "Overhead view of the bride crossing the lit lawn" },
-  { name: "lawn-wide", alt: "A wide view across the green lawn" },
-  { name: "table-setting", alt: "A round table dressed for dinner" },
-  { name: "parking-forecourt", alt: "The paved parking forecourt at the Ekamra Greens gate" },
+  { name: "pink-canopy-walk", alt: "A walkway under pink and white drapes, set with flowers" },
+  { name: "haldi-steps", alt: "Steps dressed in marigolds and yellow lattice for the haldi" },
+  { name: "lawn-dining", alt: "Dinner tables under chandelier frames on the lawn at night" },
+  { name: "photo-booth", alt: "A pink photo booth wrapped in marigolds" },
+  { name: "couple-entry", alt: "The couple makes their entrance through fog and fountains of sparks" },
   { name: "arrival-sign", alt: "The Ekamra Greens signboard at the gate" },
   { name: "garden-walk", alt: "A paved garden walk lined with plants" },
-  { name: "lawn-side", alt: "Hedges and trees along the lawn" },
+  { name: "haldi-smoke", alt: "The couple firing colour-smoke cannons at the haldi" },
 ];
 
 // Deal tiles into columns, always topping up the shortest one, so columns end level.
@@ -101,13 +101,13 @@ export default function Gallery() {
     <section id="gallery" ref={root} className="relative overflow-x-clip bg-paper px-[var(--gutter)] pb-[18vh] pt-[14vh]">
       <div className="mb-[9vh] flex flex-col items-center text-center">
         <h2 className="display text-[clamp(44px,7.4vw,110px)]">
-          <em>From</em> our
+          Our
           <br />
           evenings
         </h2>
         <p className="mt-6 max-w-[44ch] text-base leading-relaxed text-ink-soft md:text-[17px]">
-          Real celebrations on the lawn and in the hall, from the drone above the crowd to the details on
-          every table.
+          Real celebrations on the lawn and in the hall, from the haldi's colour to the details on
+          every stage.
         </p>
       </div>
 

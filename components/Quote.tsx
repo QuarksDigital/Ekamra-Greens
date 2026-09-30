@@ -40,7 +40,7 @@ export default function Quote() {
 
   return (
     <section ref={root} className="relative flex min-h-[140vh] flex-col items-center justify-center overflow-hidden bg-paper py-[14vh]">
-      <blockquote className="display w-full text-center text-[clamp(52px,10.4vw,168px)] leading-[0.95]">
+      <blockquote className="display relative z-10 w-full text-center text-[clamp(52px,10.4vw,168px)] leading-[0.95]">
         {ROWS.map((r) => (
           <span key={r} data-row className="block whitespace-nowrap will-change-transform">
             {r}
@@ -48,7 +48,7 @@ export default function Quote() {
         ))}
       </blockquote>
       {/* Faint rotating mark behind the words: present, never in the way of reading */}
-      <div ref={mark} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.14]">
+      <div ref={mark} className="pointer-events-none absolute left-1/2 top-1/2 z-0 -translate-x-1/2 -translate-y-1/2 opacity-[0.14]">
         <Emblem className="h-[clamp(180px,26vw,380px)] w-[clamp(180px,26vw,380px)]" ring="var(--color-wine)" strokeWidth={8} />
       </div>
       <p className="label mt-12 text-ink-soft">The Ekamra Greens promise</p>

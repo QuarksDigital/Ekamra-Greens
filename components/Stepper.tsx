@@ -19,8 +19,8 @@ const STEPS = [
   },
   {
     word: "banquet",
-    src: "/img/hall-axis.webp",
-    alt: "The long banquet hall under chandeliers",
+    src: "/img/banquet-wedding.webp",
+    alt: "The couple in the banquet, dressed with arches, chandeliers and flowers",
     note: "Inside, the grand hall carries the celebration into the night.",
   },
 ];
@@ -60,7 +60,7 @@ export default function Stepper() {
   // Plain wrapper: GSAP pins the section inside it, so React never loses track of its node.
   return (
     <div>
-      <section id="moments" ref={root} className="relative h-svh overflow-hidden bg-ink text-paper">
+      <section id="moments" ref={root} className="relative h-lvh overflow-hidden bg-ink text-paper">
         {STEPS.map((s, i) => (
           <div key={s.word} data-pane className="absolute inset-0 overflow-hidden" style={{ zIndex: i }}>
             <div data-img className="absolute inset-0 will-change-transform">
@@ -83,7 +83,7 @@ export default function Stepper() {
           ))}
         </ol>
 
-        <div className="absolute inset-x-0 bottom-0 z-10 px-[var(--gutter)] pb-[5vh] text-center">
+        <div className="absolute inset-x-0 bottom-0 z-10 px-[var(--gutter)] pb-[calc(5vh+100lvh-100svh)] text-center">
           <p className="mx-auto mb-5 max-w-[40ch] text-[15px] font-medium text-paper/90 md:text-base" aria-live="polite">
             {STEPS[active].note}
           </p>

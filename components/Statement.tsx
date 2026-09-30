@@ -9,9 +9,9 @@ type Part = { t: string; italic?: boolean } | { img: string; alt: string };
 // The headline carries small photo capsules between its words, like an
 // editorial spread, so image and statement read as one sentence.
 const LINES: Part[][] = [
-  [{ t: "Every" }, { img: "/img/entrance-florals.webp", alt: "A floral gateway" }, { t: "celebration" }],
-  [{ t: "deserves a" }, { img: "/img/couple.webp", alt: "A bride and groom on stage" }, { t: "setting", italic: true }],
-  [{ t: "worth" }, { img: "/img/night-tree-lights.webp", alt: "The lawn's tree lit at night" }, { t: "remembering.", italic: true }],
+  [{ t: "Every" }, { img: "/img/haldi-colours.webp", alt: "The couple dancing through clouds of haldi colour" }, { t: "celebration" }],
+  [{ t: "deserves a" }, { img: "/img/white-stage.webp", alt: "A white arched wedding stage lit at night" }, { t: "setting", italic: true }],
+  [{ t: "worth" }, { img: "/img/aisle-walk.webp", alt: "The bride and groom walking down a floral aisle" }, { t: "remembering.", italic: true }],
 ];
 
 export default function Statement() {

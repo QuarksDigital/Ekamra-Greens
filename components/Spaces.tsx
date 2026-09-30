@@ -40,11 +40,11 @@ export default function Spaces() {
     >
       <div className="flex flex-col items-center text-center">
         <p className="font-display text-sm italic text-ink-soft">
-          three spaces,{" "}
-          <span className="not-italic tracking-[0.08em]">ONE ADDRESS</span>
+          Three spaces,{" "}
+          <span className="italic tracking-[0.08em]">One address</span>
         </p>
         <h2 className="display mt-4 text-[clamp(44px,7.4vw,110px)]">
-          The <em>grounds</em>
+          <em>The grounds</em>
         </h2>
       </div>
 
@@ -67,14 +67,14 @@ export default function Spaces() {
             <p className="max-w-[46ch] text-base leading-relaxed text-ink-soft md:text-[17px]">
               {s.body}
             </p>
-            <div data-row-img className="relative aspect-[4/3] overflow-hidden">
+            <div data-row-img className="relative aspect-4/3 overflow-hidden">
               <Image
                 loading="eager"
                 src={s.image}
                 alt={s.alt}
                 fill
                 sizes="(min-width:768px) 30vw, 100vw"
-                className="object-cover transition-transform duration-[1.4s] ease-[var(--ease-out-expo)] hover:scale-[1.04]"
+                className="object-cover transition-transform duration-[1.4s] ease-out-expo hover:scale-[1.04]"
               />
             </div>
           </article>
@@ -87,7 +87,7 @@ export default function Spaces() {
           {OCCASIONS.map((o, i) => (
             <li key={o} className="flex items-baseline gap-6">
               <span
-                className={i % 2 ? "italic" : "uppercase tracking-[-0.01em]"}
+                className={"uppercase tracking-[-0.01em]"}
               >
                 {o}
               </span>
